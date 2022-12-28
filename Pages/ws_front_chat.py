@@ -114,7 +114,7 @@ def ws_chat():
 
     # 선택한 랜덤 벤더에게 여러가지 채팅 메시지 전송
     try:
-        driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Hello!,  ' + vendorTitle) + Keys.RETURN)
+        driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Hello,  ' + vendorTitle) + Keys.RETURN)
         time.sleep(2)
         driver.find_element(By.CLASS_NAME, "input-chat").send_keys('I am sending a chat using an test automation program.' + Keys.RETURN)
         time.sleep(2)
@@ -122,7 +122,7 @@ def ws_chat():
         time.sleep(2)
         driver.find_element(By.CLASS_NAME, "input-chat").send_keys('How is the weather today?' + Keys.RETURN)
         time.sleep(2)
-        driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Have a good day today, ' + vendorTitle) + Keys.RETURN)
+        driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Have a good today, ' + vendorTitle) + Keys.RETURN)
         time.sleep(4)
     except:
         pyautogui.alert("Error : Vendor search failed.")
