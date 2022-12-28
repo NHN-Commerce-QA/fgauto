@@ -141,12 +141,6 @@ def ws_chat():
     driver.implicitly_wait(5)
     time.sleep(5)
 
-    # 수정 필요
-    backGround = driver.find_element(By.CLASS_NAME, "chat-content").value_of_css_property("background-color")
-    print(backGround)
-
-    
-
     # 채팅방 나가기
     # leave_room = driver.find_element(By.CLASS_NAME, "btn-menu hide-text")
     # leave_room.click()
