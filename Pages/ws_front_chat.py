@@ -34,7 +34,7 @@ def ws_chat():
         loginbtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : login btn is not found")
+        pyautogui.alert("Error : login btn is not found!")
         print("Error : login btn is not found")
         driver.quit()
 
@@ -94,14 +94,14 @@ def ws_chat():
     driver.implicitly_wait(5)
 
     # 벤더 검색
-    vendorName = ['allium', '&merci', 'zenana', 'ZAD', 'Kind Lips', '3VERY', 'a mente', '01 Agrade', 'Eva Franco', 'Celavi', 'Adelyn Rae', 'Day G', '7th Ray']
+    vendorName = ['allium', 'zenana', 'ZAD', 'Kind Lips', '3VERY', 'a mente', '01 Agrade', 'Eva Franco', 'Celavi', 'Adelyn Rae', 'Day G', '7th Ray']
     choiceVendor = random.choice(vendorName)
 
     # 벤더를 검색하는데 자동화 프로그램으로는 로딩이 지속되는 현상이 있어서, 별도로 pyautogui 라이브러리를 활용하여 검색
     driver.find_element(By.XPATH, "//*[@id='contanier']/div/div/section[1]/main/div[3]/div/input").click()
     pyautogui.typewrite(choiceVendor, interval=0.1)
-    driver.implicitly_wait(10)
-    time.sleep(1)
+    driver.implicitly_wait(15)
+    time.sleep(5)
     # Xpath 및 Class name으로 엘리먼트를 찾아낼 수 없는 오류가 지속적으로 발생하여, CSS selector 방법으로 해결
     driver.find_element(By.CSS_SELECTOR, "#js-chat-List > div > ul > li").click()
     driver.implicitly_wait(5)
@@ -110,6 +110,7 @@ def ws_chat():
     vendorTitle_xpath = driver.find_element(By.XPATH, "//*[@id='top-vendor-name']")
     vendorTitle = vendorTitle_xpath.text
     print('chat random vendor : ' + vendorTitle)
+    time.sleep(4)
 
     # 선택한 랜덤 벤더에게 여러가지 채팅 메시지 전송
     try:
@@ -122,7 +123,7 @@ def ws_chat():
         driver.find_element(By.CLASS_NAME, "input-chat").send_keys('How is the weather today?' + Keys.RETURN)
         time.sleep(2)
         driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Have a good day today, ' + vendorTitle) + Keys.RETURN)
-        time.sleep(2)
+        time.sleep(4)
     except:
         pyautogui.alert("Error : Vendor search failed.")
         print("Error : Vendor search failed.")
@@ -136,10 +137,12 @@ def ws_chat():
     search_field = driver.find_element(By.XPATH, "//*[@id='chat-header-section']/div[1]/div[1]/input")
     search_field.send_keys(vendorTitle)
     driver.implicitly_wait(3)
-    driver.fine_element(By.CLASS_NAME, "keyword-search-btn nclick").click()
+    driver.find_element(By.XPATH, "//*[@id='chat-header-section']/div[1]/div[1]/button[1]").click()
     driver.implicitly_wait(5)
+    time.sleep(5)
 
-    backGround = driver.fine_element(By.TAG_NAME, "b").value_of_css_property("background-color")
+    # 수정 필요
+    backGround = driver.find_element(By.CLASS_NAME, "chat-content").value_of_css_property("background-color")
     print(backGround)
 
     
