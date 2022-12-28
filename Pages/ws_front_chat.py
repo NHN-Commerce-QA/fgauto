@@ -140,14 +140,32 @@ def ws_chat():
     driver.find_element(By.XPATH, "//*[@id='chat-header-section']/div[1]/div[1]/button[1]").click()
     driver.implicitly_wait(5)
     time.sleep(5)
+    
+    # 키워드 검색 후 검색 필드 닫기
+    backbtn = driver.find_element(By.ID, "backBtn")
+    backbtn.click()
+    driver.implicitly_wait(3)
+    time.sleep(3)
 
     # 채팅방 나가기
-    # leave_room = driver.find_element(By.CLASS_NAME, "btn-menu hide-text")
-    # leave_room.click()
-    # driver.implicitly_wait(3)
+    leave = driver.find_element(By.CLASS_NAME, "btn-menu.hide-text") # 클래스 네임으로 찾을 때, 공백은 "."으로 매꿔야 함
+    driver.implicitly_wait(3) 
+    leave.click()
+    driver.implicitly_wait(3)
+    leave_room = driver.find_element(By.ID, "leave")
+    driver.implicitly_wait(3)
+    leave_room.click()
+    driver.implicitly_wait(3)
 
-    # driver.close()
-    # driver.switch_to.window(driver.window_handles[0])
-    # driver.implicitly_wait(3)
+    # 채팅방 나가면 미세한 딜레이가 있어서 여유 시간 추가
+    time.sleep(5)
 
-    
+    # 새 창으로 열린 챗 페이지 닫고 기존 페이지로 다시 스위칭
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
+    driver.implicitly_wait(3)
+
+    time.sleep(3)
+
+    # 브라우저 종료
+    driver.quit()
