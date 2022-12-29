@@ -64,13 +64,7 @@ def ws_login():
     if introducing_order.is_displayed():
         introducing_order.click()
         time.sleep(1)
+        driver.implicitly_wait(5)
     else:
         time.sleep(1)
-
-    # Home Deals 이벤트 팝업 모달이 표시될 때, 닫기 / 없으면 Pass
-    homedeals = driver.find_element(By.ID, "home-deals-open-popup-close")
-    if homedeals.is_displayed():
-        homedeals.click()
-        time.sleep(1)
-    else:
-        time.sleep(1)
+        driver.implicitly_wait(5)
