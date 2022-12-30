@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 def ws_shopbag():
     options = webdriver.ChromeOptions()
@@ -66,27 +67,22 @@ def ws_shopbag():
     if introducing_order.is_displayed():
         introducing_order.click()
         time.sleep(1)
+        driver.implicitly_wait(5)
     else:
         time.sleep(1)
-
-    # Home Deals 이벤트 팝업 모달이 표시될 때, 닫기 / 없으면 Pass
-    homedeals = driver.find_element(By.ID, "home-deals-open-popup-close")
-    if homedeals.is_displayed():
-        homedeals.click()
-        time.sleep(1)
-    else:
-        time.sleep(1)
+        driver.implicitly_wait(5)
 
 
-        
+
+
     # 메인 홈에서 검색 필드에 랜덤 벤더 입력
-    vendorName = ['allium', 'zenana', 'Kind Lips', 'a mente', '01 Agrade', '7th Ray']
-    choiceVendor = random.choice(vendorName)
+    vendorName = ['allium', 'zenana', '7th Ray']
+    vendorChoice = random.choice(vendorName)
 
     try:
         driver.find_element(By.CLASS_NAME, "search-input").click()
         driver.implicitly_wait(3)
-        pyautogui.typewrite(choiceVendor, interval=0.1)
+        pyautogui.typewrite(vendorChoice, interval=0.1)
         driver.implicitly_wait(3)
         driver.find_element(By.CLASS_NAME, "btn-search").click()
         driver.implicitly_wait(10)
@@ -95,36 +91,70 @@ def ws_shopbag():
         print("Error : Vendor search failed")
         driver.quit()
 
-    # 가장 맨 앞 3개 아이템 쇼핑백에 추가    
-    # try:
-    driver.find_element(By.XPATH, "//*[@id='item-found']/div[1]/ul/li[1]").click()
-    driver.implicitly_wait(10)
+     
+    # 가장 맨 앞 부터 3번째 아이템까지 순차적으로 쇼핑백에 추가   
+    for item_number in range(1, 4):
+        item_path = "//*[@id='item-found']/div[1]/ul/li[{}]".format(item_number)
+        item = driver.find_element(By.XPATH, item_path).click()
+        driver.implicitly_wait(5)
+        # QTY 입력
+        try:
+            nqty = driver.find_element(By.ID, "lb_qty")
+            # QTY입력 칸에 값이 있다면 지우고 수량 1 입력, 없다면 그냥 1 입력
+            if nqty.is_enabled():
+                nqty.clear()
+                nqty.send_keys("1")
+                time.sleep(1)
+                driver.execute_script("window.scrollTo(0, 600)")
+                time.sleep(2)
+            else:
+                nqty.send_keys("1")
+                time.sleep(1)
+                driver.execute_script("window.scrollTo(0, 600)")
+                time.sleep(2)
+        except:
+            pyautogui.alert("Error : Qty input not found")
+            print("Error : Qty input not found")
+            driver.quit()
 
-    nqty = driver.find_element(By.ID, "lb_qty")
+        # Add To Shopping Bag 버튼 클릭
+        try:
+            driver.find_element(By.CSS_SELECTOR, "#content > div > div.pdt_wrap.renewal_premium > div.pdt_detail > div.btn_group > span").click()
+            driver.implicitly_wait(5)
+            time.sleep(5)
+        except:
+            pyautogui.alert("Error : Add to shoppingbag button not found")
+            print("Error : Add to shoppingbag button not found")
+        # 쇼핑백 아이콘에 표시되는 숫자 뱃지 크롤링
+        shopbagNumber_xpath = driver.find_element(By.XPATH, "//*[@id='miniCount']/em")
+        shopbagNumber = shopbagNumber_xpath.text
+        print("product qty : " + shopbagNumber)
 
-    if nqty.is_enabled():
-        nqty.clear()
-        nqty.send_keys("1")
-        time.sleep(1)
-        driver.execute_script("window.scrollTo(0, 400)")
-        time.sleep(2)
-    else:
-        nqty.send_keys("1")
-        time.sleep(1)
-        driver.execute_script("window.scrollTo(0, 400)")
-        time.sleep(2)
-
-    driver.find_element(By.CSS_SELECTOR, "#content > div > div.pdt_wrap.renewal_premium > div.pdt_detail > div.btn_group > span").click()
-    driver.implicitly_wait(5)
-    time.sleep(2)
+        # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 넘버 뱃지가 1인 경우 추가된 것 확인
+        if int(shopbagNumber) == 1: # shopbagNumber는 1이라는 텍스트를 추출하였기 때문에, int형 변환을 해주어야 관계연산자가 성립된다.
+            print("Success message : product added to shppoingbag")
+            time.sleep(2)
+            driver.back()
+            driver.implicitly_wait(5)
+            time.sleep(3)
+        # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 숫자가 1이 아니라면 추가되지 않은 것으로 판단
+        else:
+            pyautogui.alert("Error : product not added to shoppingbag")
+            print("Error : product not added to shoppingbag")
+            driver.quit()
     
+    # 브라우저 새로고침
     driver.refresh()
     driver.implicitly_wait(5)
-    time.sleep(2)
+    time.sleep(5)
+    
+    # 쇼핑백 아이콘에 마우스 Hover 액션
+    shoppingbag_icon = driver.find_element(By.XPATH, "//*[@id='miniCount']")
+    ActionChains(driver).move_to_element(shoppingbag_icon).perform()
+    time.sleep(1)
+    # 쇼핑백 페이지로 이동
+    shoppingbag_icon.click()
+    driver.implicitly_wait(10)
 
-    # except:
-    # pyautogui.alert("Error : Shopping bag add failed")
-    # print("Error : Shopping bag add failed")
-    # driver.quit()
-    # driver.find_element(By.XPATH, "//*[@id='item-found']/div[1]/ul/li[2]").click()
-    # driver.find_element(By.XPATH, "//*[@id='item-found']/div[1]/ul/li[3]").click()
+    # 브라우저 종료
+    driver.quit()

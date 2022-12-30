@@ -6,11 +6,3 @@ from Pages import ws_front_shopbag
 # TC 6
 ws_front_shopbag.ws_shopbag()
 
-# TC 7
-
-# TC 8
-
-# TC 9
-
-# TC 10
-
