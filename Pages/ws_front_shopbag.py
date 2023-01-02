@@ -95,8 +95,8 @@ def ws_shopbag():
     # 가장 맨 앞 부터 3번째 아이템까지 순차적으로 쇼핑백에 추가   
     for item_number in range(1, 4):
         item_path = "//*[@id='item-found']/div[1]/ul/li[{}]".format(item_number)
-        item = driver.find_element(By.XPATH, item_path).click()
-        driver.implicitly_wait(5)
+        driver.find_element(By.XPATH, item_path).click()
+        driver.implicitly_wait(10)
         # QTY 입력
         try:
             nqty = driver.find_element(By.ID, "lb_qty")
@@ -106,12 +106,12 @@ def ws_shopbag():
                 nqty.send_keys("1")
                 time.sleep(1)
                 driver.execute_script("window.scrollTo(0, 600)")
-                time.sleep(2)
+                driver.implicitly_wait(3)
             else:
                 nqty.send_keys("1")
                 time.sleep(1)
                 driver.execute_script("window.scrollTo(0, 600)")
-                time.sleep(2)
+                driver.implicitly_wait(3)
         except:
             pyautogui.alert("Error : Qty input not found")
             print("Error : Qty input not found")
@@ -120,23 +120,22 @@ def ws_shopbag():
         # Add To Shopping Bag 버튼 클릭
         try:
             driver.find_element(By.CSS_SELECTOR, "#content > div > div.pdt_wrap.renewal_premium > div.pdt_detail > div.btn_group > span").click()
-            driver.implicitly_wait(5)
-            time.sleep(5)
+            driver.implicitly_wait(10)
+            time.sleep(3)
         except:
             pyautogui.alert("Error : Add to shoppingbag button not found")
             print("Error : Add to shoppingbag button not found")
         # 쇼핑백 아이콘에 표시되는 숫자 뱃지 크롤링
         shopbagNumber_xpath = driver.find_element(By.XPATH, "//*[@id='miniCount']/em")
         shopbagNumber = shopbagNumber_xpath.text
-        print("product qty : " + shopbagNumber)
+        print("Shopping Cart badge : " + shopbagNumber)
 
-        # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 넘버 뱃지가 1인 경우 추가된 것 확인
-        if int(shopbagNumber) == 1: # shopbagNumber는 1이라는 텍스트를 추출하였기 때문에, int형 변환을 해주어야 관계연산자가 성립된다.
+        # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 넘버 뱃지가 1보다 크거나 같은 경우 추가된 것 확인
+        if int(shopbagNumber) >= 1: # shopbagNumber는 1이라는 텍스트를 추출하였기 때문에, int형 변환을 해주어야 관계연산자가 성립된다.
             print("Success message : product added to shppoingbag")
-            time.sleep(2)
             driver.back()
-            driver.implicitly_wait(5)
-            time.sleep(3)
+            driver.implicitly_wait(10)
+            time.sleep(1)
         # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 숫자가 1이 아니라면 추가되지 않은 것으로 판단
         else:
             pyautogui.alert("Error : product not added to shoppingbag")
@@ -145,8 +144,8 @@ def ws_shopbag():
     
     # 브라우저 새로고침
     driver.refresh()
-    driver.implicitly_wait(5)
-    time.sleep(5)
+    driver.implicitly_wait(10)
+    time.sleep(1)
     
     # 쇼핑백 아이콘에 마우스 Hover 액션
     shoppingbag_icon = driver.find_element(By.XPATH, "//*[@id='miniCount']")
@@ -155,6 +154,38 @@ def ws_shopbag():
     # 쇼핑백 페이지로 이동
     shoppingbag_icon.click()
     driver.implicitly_wait(10)
+    time.sleep(1)
 
-    # 브라우저 종료
-    driver.quit()
+    # 총 주문금액 데이터 크롤링
+    totalAmount_classname = driver.find_element(By.CLASS_NAME, 'totalCheckoutAmount')
+    totalAmount = totalAmount_classname.text
+    print("Total Amount : " + totalAmount)
+
+    # 쇼핑백에 담긴 제품 체크아웃 진행
+    checkOutbtn = driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-checkoutAll.nclick')
+
+    if checkOutbtn.is_enabled():
+        checkOutbtn.click()
+        driver.implicitly_wait(10)
+        time.sleep(1)
+    else:
+        driver.find_element(By.CLASS_NAME, 'base-checkbox').click()
+        time.sleep(2)
+        checkOutbtn.click()
+        driver.implicitly_wait(10)
+        time.sleep(1)
+
+    # Shipping 단계 - 벤더에게 보낼 note 작성 후 다음 단계
+    note_To_vendor = driver.find_element(By.CLASS_NAME, 'noteToVendor')
+    ActionChains(driver).move_to_element(note_To_vendor).perform()
+    time.sleep(1)
+    note_To_vendor.send_keys('Test Automation')
+    time.sleep(1)
+    driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-goToPayment.nclick').click()
+    time.sleep(2)
+    driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-goToReview.nclick').click()
+    time.sleep(2)
+
+    driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-checkout.nclick').click()
+    driver.implicitly_wait(15)
+
