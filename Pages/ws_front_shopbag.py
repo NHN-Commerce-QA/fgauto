@@ -45,9 +45,9 @@ def ws_shopbag():
 
     try:
         driver.find_element(By.NAME, "userName").send_keys(ID + Keys.TAB)
-        time.sleep(1)
+        time.sleep(0.2)
         driver.find_element(By.NAME, "password").send_keys(PW + Keys.TAB)
-        time.sleep(1)
+        time.sleep(0.2)
     except:
         pyautogui.alert("Error : ID or PW is not found")
         print("Error : ID or PW is not found")
@@ -57,20 +57,29 @@ def ws_shopbag():
     try:
         signin_btn = driver.find_element(By.ID, "btn-signin")
         signin_btn.click()
-        time.sleep(7)
+        driver.implicitly_wait(15)
     except:
         pyautogui.alert("Error : Sign in btn is not found")
         print("Error : Sign in btn is not found")
 
+    # 로그인 성공
+    print("========================Test Account Login========================")
+    print("Account ID : " + ID)
+    print("Password : " + PW)
+
     # Introducing Order Updates via Text 팝업 모달이 표시될 때, 닫기 / 없으면 Pass
-    introducing_order = driver.find_element(By.ID, "sms-modal-close")
-    if introducing_order.is_displayed():
-        introducing_order.click()
-        time.sleep(1)
-        driver.implicitly_wait(5)
+    if driver.find_element(By.ID, "sms-modal-close").is_displayed():
+        driver.find_element(By.ID, "sms-modal-close").click()
+        time.sleep(2)
     else:
         time.sleep(1)
-        driver.implicitly_wait(5)
+
+    # home deals 팝업이 표시될 때 닫기 / 없으면 Pass
+    if driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').is_displayed():
+        driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').click()
+        time.sleep(2)
+    else:
+        time.sleep(1)
 
 
 
@@ -187,5 +196,6 @@ def ws_shopbag():
     time.sleep(2)
 
     driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-checkout.nclick').click()
+    time.sleep(7)
     driver.implicitly_wait(15)
 
