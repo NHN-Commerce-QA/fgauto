@@ -1,5 +1,5 @@
 import time
-import pyautogui
+from tkinter import messagebox as msgbox
 import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -26,7 +26,7 @@ def ws_order():
         cookiebtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : Cookie accept all btn is not found")
+        msgbox.showerror("Error", "쿠키 버튼을 찾을 수 없습니다.")
         print("Error : Cookie accept all btn is not found")
         driver.quit()
 
@@ -36,7 +36,7 @@ def ws_order():
         loginbtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : login btn is not found")
+        msgbox.showerror("Error", "로그인 버튼을 찾을 수 없습니다.")
         print("Error : login btn is not found")
         driver.quit()
 
@@ -50,7 +50,7 @@ def ws_order():
         driver.find_element(By.NAME, "password").send_keys(PW + Keys.TAB)
         time.sleep(0.2)
     except:
-        pyautogui.alert("Error : ID or PW is not found")
+        msgbox.showerror("Error", "ID나 PW를 찾을 수 없습니다.")
         print("Error : ID or PW is not found")
         driver.quit()
 
@@ -60,7 +60,7 @@ def ws_order():
         signin_btn.click()
         driver.implicitly_wait(15)
     except:
-        pyautogui.alert("Error : Sign in btn is not found")
+        msgbox.showerror("Error", "Sign in 버튼을 찾을 수 없습니다.")
         print("Error : Sign in btn is not found")
 
     # 로그인 성공
@@ -81,6 +81,7 @@ def ws_order():
         time.sleep(2)
     else:
         time.sleep(1)
+
 
 
     driver.find_element(By.CLASS_NAME, 'user-avatar').click()
@@ -124,7 +125,7 @@ def ws_order():
     if orderNumber == order_Data["order_Details"]:
         print("Successful Message - Order numbers match each other : " + orderNumber + " == " + order_Data["order_Details"])
     else:
-        pyautogui.alert("Error Message - Order numbers do not match each other : " + orderNumber + " ≠ " + order_Data["order_Details"])
+        msgbox.showerror("Error Message", "Order numbers do not match each other : " + orderNumber + " ≠ " + order_Data["order_Details"])
         print("Error Message - Order numbers do not match each other : " + orderNumber + " ≠ " + order_Data["order_Details"])
         driver.quit()
 
@@ -140,7 +141,7 @@ def ws_order():
     if orderDate == order_Data["order_Date"]:
         print("Successful Message - Order Dates match each other : " + orderDate + " == " + order_Data["order_Date"])
     else:
-        pyautogui.alert("Error Message - Order numbers do not match each other : " + orderDate + " ≠ " + order_Data["order_Date"])
+        msgbox.showerror("Error Message", "Order numbers do not match each other : " + orderDate + " ≠ " + order_Data["order_Date"])
         print("Error Message - Order Dates do not match each other : " + orderDate + " ≠ " + order_Data["order_Date"])
         driver.quit()
 
@@ -156,7 +157,7 @@ def ws_order():
     if orderAmount == order_Data["amount"]:
         print("Successful Message - Order Amounts match do not each other : " + orderAmount + " == " + order_Data["amount"])
     else:
-        pyautogui.alert("Error Message - Order amounts do not match each other : " + orderAmount + " ≠ " + order_Data["amount"])
+        msgbox.showerror("Error Message", "Order amounts do not match each other : " + orderAmount + " ≠ " + order_Data["amount"])
         print("Error Message - Order amounts do not match each other : " + orderAmount + " ≠ " + order_Data["amount"])
         driver.quit()
     
@@ -172,7 +173,7 @@ def ws_order():
     if orderNote == 'Test Automation':
         print("Successful Message - Order Note match do not each other : " + orderNote + " == " + "Test Automation")
     else:
-        pyautogui.alert("Error Message - Order notes do not match each other : " + orderNote + " ≠ " + "Test Automation")
+        msgbox.showerror("Error Message", "Order notes do not match each other : " + orderNote + " ≠ " + "Test Automation")
         print("Error Message - Order notes do not match each other : " + orderNote + " ≠ " + "Test Automation")
         driver.quit()
     
@@ -195,7 +196,7 @@ def ws_order():
             if cancelSuccess_alert.is_displayed():
                 print("Success - The order has been cancelled")
             else:
-                pyautogui.alert("Fail - The order has been not cancelled")
+                msgbox.showerror("Error", "The order has been not cancelled")
                 print("Fail - The order has been not cancelled")
         else:
             time.sleep(1)
@@ -246,7 +247,7 @@ def ws_order():
     if reorder_vendor == order_Data['company']: 
         print("Check vendor name match : " + reorder_vendor + " == " + order_Data['company'])
     else:
-        pyautogui.alert("Fail : The vendor name of order details is not the same.")
+        msgbox.showerror("Fail", "The vendor name of order details is not the same.")
         print("Fail : The vendor name of order details is not the same.")
         driver.quit()
 
