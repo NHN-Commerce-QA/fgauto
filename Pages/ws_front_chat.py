@@ -1,5 +1,5 @@
 import time
-import pyautogui
+from tkinter import messagebox as msgbox
 import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -24,7 +24,7 @@ def ws_chat():
         cookiebtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : Cookie accept all btn is not found")
+        msgbox.showerror("Error", "쿠키 버튼을 찾을 수 없습니다.")
         print("Error : Cookie accept all btn is not found")
         driver.quit()
 
@@ -34,7 +34,7 @@ def ws_chat():
         loginbtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : login btn is not found")
+        msgbox.showerror("Error", "로그인 버튼을 찾을 수 없습니다.")
         print("Error : login btn is not found")
         driver.quit()
 
@@ -48,7 +48,7 @@ def ws_chat():
         driver.find_element(By.NAME, "password").send_keys(PW + Keys.TAB)
         time.sleep(0.2)
     except:
-        pyautogui.alert("Error : ID or PW is not found")
+        msgbox.showerror("Error", "ID나 PW를 찾을 수 없습니다.")
         print("Error : ID or PW is not found")
         driver.quit()
 
@@ -58,7 +58,7 @@ def ws_chat():
         signin_btn.click()
         driver.implicitly_wait(15)
     except:
-        pyautogui.alert("Error : Sign in btn is not found")
+        msgbox.showerror("Error", "Sign in 버튼을 찾을 수 없습니다.")
         print("Error : Sign in btn is not found")
 
     # 로그인 성공
@@ -88,7 +88,7 @@ def ws_chat():
         chat_icon.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : Chat icon is not found")
+        msgbox.showerror("Error", "채팅 아이콘을 찾을 수 없습니다.")
         print("Error : Chat icon is not found")
         time.sleep(1)
 
@@ -101,9 +101,8 @@ def ws_chat():
     vendorName = ['allium', 'zenana', 'ZAD', 'Kind Lips', '3VERY', 'a mente', '01 Agrade', 'Eva Franco', 'Celavi', 'Adelyn Rae', 'Day G', '7th Ray']
     choiceVendor = random.choice(vendorName)
 
-    # 벤더를 검색하는데 자동화 프로그램으로는 로딩이 지속되는 현상이 있어서, 별도로 pyautogui 라이브러리를 활용하여 검색
-    driver.find_element(By.XPATH, "//*[@id='contanier']/div/div/section[1]/main/div[3]/div/input").click()
-    pyautogui.typewrite(choiceVendor, interval=0.1)
+    # CSS Selector로 placeholder를 통해 요소를 찾아냄
+    driver.find_element(By.CSS_SELECTOR, "[placeholder = 'Search vendor name']").send_keys(choiceVendor)
     driver.implicitly_wait(15)
     time.sleep(5)
     # Xpath 및 Class name으로 엘리먼트를 찾아낼 수 없는 오류가 지속적으로 발생하여, CSS selector 방법으로 해결
@@ -129,7 +128,7 @@ def ws_chat():
         driver.find_element(By.CLASS_NAME, "input-chat").send_keys(('Have a good today, ' + vendorTitle) + Keys.RETURN)
         time.sleep(4)
     except:
-        pyautogui.alert("Error : Vendor search failed.")
+        msgbox.showerror("Error", "벤더 검색에 실패했습니다.")
         print("Error : Vendor search failed.")
         driver.implicitly_wait(3)
 
