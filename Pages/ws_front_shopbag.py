@@ -1,5 +1,5 @@
 import time
-import pyautogui
+from tkinter import messagebox as msgbox
 import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -25,7 +25,7 @@ def ws_shopbag():
         cookiebtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : Cookie accept all btn is not found")
+        msgbox.showerror("Error", "쿠키 버튼을 찾을 수 없습니다.")
         print("Error : Cookie accept all btn is not found")
         driver.quit()
 
@@ -35,7 +35,7 @@ def ws_shopbag():
         loginbtn.click()
         time.sleep(1)
     except:
-        pyautogui.alert("Error : login btn is not found")
+        msgbox.showerror("Error", "로그인 버튼을 찾을 수 없습니다.")
         print("Error : login btn is not found")
         driver.quit()
 
@@ -49,7 +49,7 @@ def ws_shopbag():
         driver.find_element(By.NAME, "password").send_keys(PW + Keys.TAB)
         time.sleep(0.2)
     except:
-        pyautogui.alert("Error : ID or PW is not found")
+        msgbox.showerror("Error", "ID나 PW를 찾을 수 없습니다.")
         print("Error : ID or PW is not found")
         driver.quit()
 
@@ -59,7 +59,7 @@ def ws_shopbag():
         signin_btn.click()
         driver.implicitly_wait(15)
     except:
-        pyautogui.alert("Error : Sign in btn is not found")
+        msgbox.showerror("Error", "Sign in 버튼을 찾을 수 없습니다.")
         print("Error : Sign in btn is not found")
 
     # 로그인 성공
@@ -89,14 +89,12 @@ def ws_shopbag():
     vendorChoice = random.choice(vendorName)
 
     try:
-        driver.find_element(By.CLASS_NAME, "search-input").click()
-        driver.implicitly_wait(3)
-        pyautogui.typewrite(vendorChoice, interval=0.1)
+        driver.find_element(By.CLASS_NAME, "search-input").send_keys(vendorChoice)
         driver.implicitly_wait(3)
         driver.find_element(By.CLASS_NAME, "btn-search").click()
         driver.implicitly_wait(10)
     except:
-        pyautogui.alert("Error : Vendor search failed")
+        msgbox.showerror("Error", "벤더 검색에 실패했습니다.")
         print("Error : Vendor search failed")
         driver.quit()
 
@@ -122,7 +120,7 @@ def ws_shopbag():
                 driver.execute_script("window.scrollTo(0, 600)")
                 driver.implicitly_wait(3)
         except:
-            pyautogui.alert("Error : Qty input not found")
+            msgbox.showerror("Error", "QTY 입력 필드를 찾을 수 없습니다.")
             print("Error : Qty input not found")
             driver.quit()
 
@@ -132,7 +130,7 @@ def ws_shopbag():
             driver.implicitly_wait(10)
             time.sleep(3)
         except:
-            pyautogui.alert("Error : Add to shoppingbag button not found")
+            msgbox.showerror("Error", "Add to Shoppingbag 버튼을 찾을 수 없습니다.")
             print("Error : Add to shoppingbag button not found")
         # 쇼핑백 아이콘에 표시되는 숫자 뱃지 크롤링
         shopbagNumber_xpath = driver.find_element(By.XPATH, "//*[@id='miniCount']/em")
@@ -147,7 +145,7 @@ def ws_shopbag():
             time.sleep(1)
         # 원래 쇼핑백이 비어있는 상태에서, 쇼핑백 아이콘에 표시되는 숫자가 1이 아니라면 추가되지 않은 것으로 판단
         else:
-            pyautogui.alert("Error : product not added to shoppingbag")
+            msgbox.showerror("Error", "제품이 쇼핑백에 추가되지 않았습니다.")
             print("Error : product not added to shoppingbag")
             driver.quit()
     
