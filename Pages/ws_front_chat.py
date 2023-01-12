@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 def ws_chat():
     options = webdriver.ChromeOptions()
@@ -74,19 +75,23 @@ def ws_chat():
         time.sleep(1)
 
     # home deals 팝업이 표시될 때 닫기 / 없으면 Pass
-    if driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').is_displayed():
-        driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').click()
-        time.sleep(2)
-    else:
+    try:
+        if driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').is_displayed():
+            driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').click()
+            time.sleep(1)
+        else:
+            time.sleep(1)
+    except NoSuchElementException:
         time.sleep(1)
 
 
 
     # Chat 아이콘 클릭
     try:
-        chat_icon = driver.find_element(By.XPATH, "//*[@id='global']/div[1]/div[2]/ul/li[3]/div/a")
+        chat_icon = driver.find_element(By.CLASS_NAME, "icon-common.chat.nclick")
         chat_icon.click()
-        time.sleep(1)
+        time.sleep(10)
+        driver.implicitly_wait(10)
     except:
         msgbox.showerror("Error", "채팅 아이콘을 찾을 수 없습니다.")
         print("Error : Chat icon is not found")
@@ -103,7 +108,12 @@ def ws_chat():
 
     # CSS Selector로 placeholder를 통해 요소를 찾아냄
     driver.find_element(By.CSS_SELECTOR, "[placeholder = 'Search vendor name']").send_keys(choiceVendor)
-    driver.implicitly_wait(15)
+    time.sleep(1)
+    driver.find_element(By.CSS_SELECTOR, "[placeholder = 'Search vendor name']").send_keys(Keys.SPACE)
+    time.sleep(1)
+    driver.find_element(By.CSS_SELECTOR, "[placeholder = 'Search vendor name']").send_keys(Keys.BACK_SPACE)
+
+    driver.implicitly_wait(10)
     time.sleep(5)
     # Xpath 및 Class name으로 엘리먼트를 찾아낼 수 없는 오류가 지속적으로 발생하여, CSS selector 방법으로 해결
     driver.find_element(By.CSS_SELECTOR, "#js-chat-List > div > ul > li").click()
