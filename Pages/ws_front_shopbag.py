@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 
 def ws_shopbag():
     options = webdriver.ChromeOptions()
@@ -75,10 +76,13 @@ def ws_shopbag():
         time.sleep(1)
 
     # home deals 팝업이 표시될 때 닫기 / 없으면 Pass
-    if driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').is_displayed():
-        driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').click()
-        time.sleep(2)
-    else:
+    try:
+        if driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').is_displayed():
+            driver.find_element(By.XPATH, '//*[@id="home-deals-open-popup"]/div/div[3]/div/div/label').click()
+            time.sleep(1)
+        else:
+            time.sleep(1)
+    except NoSuchElementException:
         time.sleep(1)
 
 
@@ -98,8 +102,7 @@ def ws_shopbag():
         print("Error : Vendor search failed")
         driver.quit()
 
-     
-    # 가장 맨 앞 부터 3번째 아이템까지 순차적으로 쇼핑백에 추가   
+    # 가장 맨 앞 부터 3번째 아이템까지 순차적으로 쇼핑백에 추가
     for item_number in range(1, 4):
         item_path = "//*[@id='item-found']/div[1]/ul/li[{}]".format(item_number)
         driver.find_element(By.XPATH, item_path).click()
