@@ -195,7 +195,6 @@ def ws_shopbag():
     time.sleep(2)
     driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-goToReview.nclick').click()
     time.sleep(2)
-
     driver.find_element(By.CLASS_NAME, 'btn-dark_grey.btn-checkout.nclick').click()
     time.sleep(7)
     driver.implicitly_wait(15)

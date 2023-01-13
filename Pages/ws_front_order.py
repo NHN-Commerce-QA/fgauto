@@ -117,7 +117,7 @@ def ws_order():
     time.sleep(1)
 
     # 페이지에 표시되는 Order No 정보 일치 확인
-    ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[1]/td'))
+    # ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[1]/td'))
     print("------------------------Order Number------------------------")
     orderNumber = driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[1]/td').text
     print("Order Number in order details page : " + orderNumber)
@@ -133,7 +133,7 @@ def ws_order():
     time.sleep(1)
 
     # 페이지에 표시되는 Order Date 정보 일치 확인
-    ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[3]/td'))
+    # ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[3]/td'))
     print("------------------------Order Date------------------------")
     orderDate = driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[2]/div[2]/table/tbody/tr[3]/td').text
     print("Order Date in order details page : " + orderDate)
@@ -149,9 +149,9 @@ def ws_order():
     time.sleep(1)
 
     # 페이지에 표시되는 Order Amount 정보 일치 확인
-    ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="div-lst-order"]/div[2]/ul/li[9]/span'))
+    # ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="div-lst-order"]/div[2]/ul/li[9]/span'))
     print("------------------------Order Amount------------------------")
-    orderAmount = driver.find_element(By.XPATH, '//*[@id="div-lst-order"]/div[2]/ul/li[9]/span').text
+    orderAmount = driver.find_element(By.CSS_SELECTOR, '#div-lst-order > div.price_info > ul > li.total > span').text
     print("Order Amount in order details page : " + orderAmount)
     print("Order Amount in order history page : " + order_Data["amount"])
     if orderAmount == order_Data["amount"]:
@@ -165,7 +165,7 @@ def ws_order():
     time.sleep(1)
 
     # 페이지에 표시되는 Order Note 정보 일치 확인 (이전 주문 처리 자동화 코드에서 입력한 데이터가 표시되어야 함)
-    ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[7]/p'))
+    # ActionChains(driver).double_click(driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[7]/p'))
     print("------------------------Order Note------------------------")
     orderNote = driver.find_element(By.XPATH, '//*[@id="order-detail-id"]/div[7]/p').text
     print("Order Note in order details page : " + orderNote)
